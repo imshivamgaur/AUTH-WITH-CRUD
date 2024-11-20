@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Page</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 min-h-screen flex items-center justify-center">
+  <div class="w-full max-w-md bg-gray-800 shadow-lg rounded-2xl p-8">
+    <h1 class="text-2xl font-bold text-center text-gray-100 mb-6">Login Your Account</h1>
+    <form action="/login" method="post" class="flex flex-col gap-6">
+      <!-- Email -->
+      <input type="email" name="email" placeholder="Email"
+        class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-200 placeholder-gray-400 focus:ring-4 focus:ring-blue-500 focus:outline-none transition duration-200">
+
+      <!-- Password -->
+      <input type="password" name="password" placeholder="Password"
+        class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-200 placeholder-gray-400 focus:ring-4 focus:ring-blue-500 focus:outline-none transition duration-200">
+
+      <!-- login btn -->
+      <input type="submit" value="Login Account"
+        class="w-full px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-md cursor-pointer transition duration-200">
+    </form>
+  </div>
+</body>
+
+</html>
