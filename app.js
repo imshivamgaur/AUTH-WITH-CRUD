@@ -6,14 +6,33 @@ const cookieParser = require("cookie-parser");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const post = require("./models/post.js");
+const multerconfig = require("./config/multerconfig.js");
+const path = require("path");
+const upload = require("./config/multerconfig.js");
 
 app.set("view engine", "ejs");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", (req, res) => {
   res.render("index.ejs");
+});
+
+app.get("/profile/upload", (req, res) => {
+  res.render("profileUpload.ejs");
+});
+
+//! UPLOAD FILE POST REQUEST
+app.post("/upload", isLoggedIn, upload.single("image"), async (req, res) => {
+  console.log(req.file);
+  const user = await userModel.findOne({ email: req.user.email });
+  console.log(user.profilepic);
+  user.profilepic = req.file.filename;
+  await user.save();
+  console.log(user.profilepic);
+  res.redirect("/profile")
 });
 
 //! LOGIN PAGE
@@ -54,8 +73,6 @@ app.get("/update/:id", isLoggedIn, async (req, res) => {
   res.render("edit.ejs", { post });
 });
 
-
-
 //! EDIT POST METHOD
 app.post("/update/:id", isLoggedIn, async (req, res) => {
   let post = await postModel.findOneAndUpdate(
@@ -66,20 +83,19 @@ app.post("/update/:id", isLoggedIn, async (req, res) => {
   res.redirect("/profile");
 });
 
-
 //! DELETE POST
 app.post("/delete/:id", isLoggedIn, async (req, res) => {
   console.log(req.params.id);
   let post = await postModel.findOneAndDelete({ _id: req.params.id });
-  res.redirect("/profile")
-})
-
+  res.redirect("/profile");
+});
 
 //! USER POSTS
 app.post("/post", isLoggedIn, async (req, res) => {
   // console.log(req.user);
   const user = await userModel.findOne({ email: req.user.email });
   let { content } = req.body;
+  if(content.trim().length === 0) return res.redirect("/profile")
 
   let post = await postModel.create({
     user: user._id,
@@ -110,7 +126,7 @@ app.post("/register", async (req, res) => {
 
       let token = jwt.sign({ email: email, userid: user._id }, "shshsh");
       res.cookie("token", token);
-      res.redirect("/profile")
+      res.redirect("/profile");
     });
   });
 });
